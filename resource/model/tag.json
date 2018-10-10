@@ -1,0 +1,46 @@
+{
+    "id": {
+        "type": "uuid",
+        "primaryKey": true,
+        "foreignKey": [false],
+        "unique": true,
+        "required": true,
+        "defaultValue": ""
+    },
+    "idRFID": {
+        "type": "text",
+        "primaryKey": false,
+        "foreignKey": [false],
+        "unique": true,
+        "required": true,
+        "defaultValue": ""
+    },
+    "idProduct": {
+        "type": "uuid",
+        "primaryKey": false,
+        "foreignKey": [
+            true,
+            {
+                "table": "product",
+                "column": "id"
+            }
+        ],
+        "unique": true,
+        "required": true,
+        "defaultValue": ""
+    },
+    "idRoom": {
+        "type": "uuid",
+        "primaryKey": false,
+        "foreignKey": [
+            true,
+            {
+                "table": "room",
+                "column": "id"
+            }
+        ],
+        "unique": false,
+        "required": true,
+        "defaultValue": ""
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "id": {
+        "type": "uuid",
+        "primaryKey": true,
+        "foreignKey": [false],
+        "unique": true,
+        "required": true,
+        "defaultValue": ""
+    },
+    "name": {
+        "type": "text",
+        "primaryKey": false,
+        "foreignKey": [false],
+        "unique": false,
+        "required": true,
+        "defaultValue": ""
+    },
+    "idStore": {
+        "type": "uuid",
+        "primaryKey": false,
+        "foreignKey": [
+            true,
+            {
+                "table": "store",
+                "column": "id"
+            }
+        ],
+        "unique": false,
+        "required": true,
+        "defaultValue": ""
+    }
+}
