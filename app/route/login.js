@@ -1,95 +1,70 @@
-// const route = require('../../../RESOURCE/route/account');
-// const errorCode = require('../../../RESOURCE/utility/errorCode');
-// const errorLogger = require('../../../RESOURCE/log/error');
+const routeConstant = require('../../resource/constant/route');
+const errorCodeConstant = require('../../resource/constant/errorCode');
+const httpStatusCodeConstant = require('../../resource/constant/httpStatusCode');
 
-// const tokenCreation = require('../../../RESOURCE/utility/tokenCreation');
+const nameValidation = require('../../resource/validation/name');
+const passwordValidation = require('../../resource/validation/password');
 
-// const emailValidation = require('../../../RESOURCE/validation/email');
-// const passwordValidation = require('../../../RESOURCE/validation/password');
-// const authenticationTypeValidation = require('../../../RESOURCE/validation/authenticationType');
+const tokenUtility = require('../../resource/utility/token');
 
-// module.exports = function(app) {
+module.exports = function(app) {
 
-//     let userDAO = app.dao.userDAO;  
-//     let authenticatedUserDAO = app.dao.authenticatedUserDAO;
+    let storeDAO = app.dao.storeDAO;
 
-//     app.post(route.LOGIN, function(req, res) {
+    app.post(routeConstant.LOGIN, function(req, res) {
 
-//         let email = req.body.email;
-//         let password = req.body.password;
-//         let type = req.body.type;
+        let name = req.body.email;
+        let password = req.body.password;
 
-//         if(emailValidation(email) && passwordValidation(password) && authenticationTypeValidation(type)) {
-//             userDAO.readByEmailPassword(email, password, function(error, result) {
+        if(nameValidation(name) && passwordValidation(password)) {
+            storeDAO.readByNamePassword(name, password, function(error, result) {
 
-//                 if(error) {
-//                     errorLogger.error(error);
+                if(error) {
+                    res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
+                        'status': false,
+                        'errorCode': errorCodeConstant.DATABASE_ERROR
+                    });
 
-//                     res.json({
-//                         'status': false,
-//                         'errorCode': errorCode.DATABASE_ERROR
-//                     });
+                    return;
+                }else {
+                    if(result) {
+                        let store = result;
 
-//                     return;
-//                 }else {
-//                     if(result) {
-//                         let user = result;
-//                         let token = tokenCreation(user);
+                        tokenUtility.create(store, function(error, token) {
 
-//                         authenticatedUserDAO.deleteByIdUserType(user._id, type, function(error) {
+                            if(error) {
+                                res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
+                                    'status': false,
+                                    'errorCode': errorCodeConstant.CREATE_TOKEN_ERROR
+                                });
 
-//                             if(error) {
-//                                 errorLogger.error(error);
+                                return;
+                            }else {
+                                res.status(httpStatusCodeConstant.CREATED).json({
+                                    'status': true,
+                                    'results': {
+                                        'token': token
+                                    }
+                                });
+                            }
+                        });
+                    }else {
+                        res.status(httpStatusCodeConstant.UNAUTHORIZED).json({
+                            'status': false,
+                            'errorCode': errorCodeConstant.AUTHENTICATION_ERROR
+                        });
 
-//                                 res.json({
-//                                     'status': false,
-//                                     'errorCode': errorCode.DATABASE_ERROR
-//                                 });
+                        return;
+                    }
+                }
+            });
+        }else {
+            res.status(httpStatusCodeConstant.BAD_REQUEST).json({
+                'status': false,
+                'errorCode': errorCodeConstant.INVALID_REQUEST
+            });
 
-//                                 return;
-//                             }else {
-//                                 authenticatedUserDAO.create(user._id, token, type, function(error) {
-
-//                                     if(error) {
-//                                         errorLogger.error(error);
-
-//                                         res.json({
-//                                             'status': false,
-//                                             'errorCode': errorCode.DATABASE_ERROR
-//                                         });
-
-//                                         return;
-//                                     }else {
-//                                         res.json({
-//                                             'status': true,
-//                                             'results': {
-//                                                 'token': token,
-//                                                 'lastEditionDate': user.lastEditionDate
-//                                             }
-//                                         });
-
-//                                         return;
-//                                     }
-//                                 });
-//                             }
-//                         });
-//                     }else {
-//                         res.json({
-//                             'status': false,
-//                             'errorCode': errorCode.INCORRECT_EMAIL_PASSWORD
-//                         });
-
-//                         return;
-//                     }
-//                 }
-//             });
-//         }else {
-//             res.json({
-//                 'status': false,
-//                 'errorCode': errorCode.INVALID_REQUEST
-//             });
-
-//             return;
-//         }
-//     });
-// };
+            return;
+        }
+    });
+};

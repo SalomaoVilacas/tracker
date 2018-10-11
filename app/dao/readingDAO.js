@@ -33,5 +33,12 @@ module.exports = function() {
         client.execute(query, callback);
     };
 
+    dao.readById = function(id, callback) {
+
+        let query = "";
+
+        client.execute(query, callback);
+    };
+
     return dao;
 };

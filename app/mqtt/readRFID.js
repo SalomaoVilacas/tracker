@@ -1,5 +1,7 @@
 const mqtt = require('mqtt');
+
 const mqttConstant = require('../../resource/constant/mqtt');
+
 const readingDAO = require('../dao/readingDAO')();
 
 const client  = mqtt.connect('mqtt://' + mqttConstant.IP_BROKER);

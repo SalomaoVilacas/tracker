@@ -1,0 +1,6 @@
+module.exports = {
+    'DATABASE_ERROR': 1,
+    'CREATE_TOKEN_ERROR': 2,
+    'AUTHENTICATION_ERROR': 3,
+    'INVALID_REQUEST': 4
+};
