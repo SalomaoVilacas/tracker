@@ -35,16 +35,16 @@
         "required": true,
         "defaultValue": ""
     },
-    "timestamp": {
-        "type": "date",
+    "mode": {
+        "type": "int",
         "primaryKey": false,
         "foreignKey": [false],
         "unique": false,
         "required": true,
         "defaultValue": ""
     },
-    "mode": {
-        "type": "int",
+    "timestamp": {
+        "type": "date",
         "primaryKey": false,
         "foreignKey": [false],
         "unique": false,

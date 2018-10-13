@@ -11,7 +11,7 @@ module.exports = function() {
     client.on('connect', function() {
 
         client.subscribe(mqttConstant.TOPIC, function(error) {
-    
+
             if(error) {
                 console.log(error);
             }else {

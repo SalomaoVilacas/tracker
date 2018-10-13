@@ -9,6 +9,6 @@ module.exports = {
     },
     'decoding': function(token, callback) {
 
-        jwt.verify(token, privateKey, callback);
+        jwt.verify(token, serverConstant.SECRET, callback);
     }
 };

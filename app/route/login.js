@@ -13,7 +13,7 @@ module.exports = function(app) {
 
     app.post(routeConstant.LOGIN, function(req, res) {
 
-        let name = req.body.email;
+        let name = req.body.name;
         let password = req.body.password;
 
         if(nameValidation(name) && passwordValidation(password)) {
@@ -27,8 +27,15 @@ module.exports = function(app) {
 
                     return;
                 }else {
-                    if(result) {
-                        let store = result;
+                    if(result.rowLength == 0) {
+                        res.status(httpStatusCodeConstant.UNAUTHORIZED).json({
+                            'status': false,
+                            'errorCode': errorCodeConstant.AUTHENTICATION_ERROR
+                        });
+
+                        return;
+                    }else {
+                        let store = JSON.parse(JSON.stringify(result.rows[0]));
 
                         tokenUtility.create(store, function(error, token) {
 
@@ -48,13 +55,6 @@ module.exports = function(app) {
                                 });
                             }
                         });
-                    }else {
-                        res.status(httpStatusCodeConstant.UNAUTHORIZED).json({
-                            'status': false,
-                            'errorCode': errorCodeConstant.AUTHENTICATION_ERROR
-                        });
-
-                        return;
                     }
                 }
             });
