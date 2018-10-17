@@ -2,7 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const consign = require('consign');
+const morgan = require('morgan');
+
 const serverConstant = require('../resource/constant/server');
+
+const log = require('../resource/utility/log');
 
 module.exports = function() {
 
@@ -10,6 +14,14 @@ module.exports = function() {
 
     app.set('secret', serverConstant.SECRET);
 
+    app.use(morgan('common', {
+        'stream': {
+            'write': function(message) {
+
+                log.info(message);
+            }
+        }
+    }));
     app.use(bodyParser.json({
         'limit': serverConstant.REQUEST_SIZE
     }));

@@ -2,7 +2,10 @@ const mqtt = require('mqtt');
 
 const mqttConstant = require('../../resource/constant/mqtt');
 
+const log = require('../../resource/utility/log');
+
 const readingDAO = require('../dao/readingDAO')();
+const eventDAO = require('../dao/eventDAO')();
 
 const client  = mqtt.connect('mqtt://' + mqttConstant.IP_BROKER);
 
@@ -12,70 +15,53 @@ module.exports = function() {
 
         client.subscribe(mqttConstant.TOPIC, function(error) {
 
-            if(error) {
-                console.log(error);
-            }else {
-                console.log("Tópico assinado");
-            }
+            if(error) log.error(error);
+            else log.info('Tópico assinado');
         });
     });
     
-    client.on('message', function(topic, message) {
+    client.on('message', function(topic, reading) {
 
-        message = JSON.parse(message.toString());
+        reading = JSON.parse(reading.toString());
 
-        readingOneAntenna(message);
+        read(reading);
     });
 };
 
-function readingOneAntenna(message) {
+function read(reading) {
 
-    readingDAO.readById(message.id, (error, result) => {
+    readingDAO.readByIdTag(reading.id, function(error, result) {
 
-        if(error) {
-            console.log(error);
-        }else {
+        if(error) log.error(error);
+        else {
             if(result.rowLength == 0) {
-                readingDAO.create(message, (error) => {
+                readingDAO.create(reading, function(error) {
 
-                    if(error) console.log(error);
-                    else console.log(message);
-                });
-            }
-        }
-    });
-};
-
-function readingTwoAntennas() {
-
-    readingDAO.readById(message.id, (error, result) => {
-
-        if(error) {
-            console.log(error);
-        }else {
-            if(result.rowLength == 0) {
-                readingDAO.create(message, (error) => {
-
-                    if(error) console.log(error);
+                    if(error) log.error(error);
                 });
             }else {
-                if(result.rows[0].mode == 'in' && message.mode == 'out') {
-                    readingDAO.create(message, (error) => {
+                if(result.rows[0].id_door == '2db25a82-2a86-4683-9eb2-2c54fc9f0652') {
+                    if(result.rows[0].type != reading.mode) {
+                        readingDAO.create(reading, function(error) {
 
-                        if(error) {
-                            console.log(error);
-                        }else {
-                            console.log("ENTROU");
-                        }
-                    });
-                }else if(result.rows[0].mode == 'out' && message.mode == 'in') {
-                    readingDAO.create(message, (error) => {
+                            if(error) log.error(error);
+                            else {
+                                let event = {};
+                                event.idTag = reading.id;
+                                event.type = (reading.mode == 'out') ? 'entrou' : 'saiu';
+                                event.timestamp = reading.timestamp;
+    
+                                eventDAO.create(event, function(error) {
+    
+                                    if(error) log.error(error);
+                                });
+                            }
+                        });
+                    }
+                }else {
+                    readingDAO.create(reading, function(error) {
 
-                        if(error) {
-                            console.log(error);
-                        }else {
-                            console.log("SAIU");
-                        }
+                        if(error) log.error(error);
                     });
                 }
             }

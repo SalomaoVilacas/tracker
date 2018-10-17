@@ -4,6 +4,6 @@ module.exports = function(app) {
 
     app.post('/test', function(req, res) {
 
-        res.send("ok");
+        res.status(200).json();
     });
 };

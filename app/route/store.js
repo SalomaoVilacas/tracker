@@ -4,6 +4,8 @@ const httpStatusCodeConstant = require('../../resource/constant/httpStatusCode')
 
 const tokenValidation = require('../../resource/validation/token');
 
+const log = require('../../resource/utility/log');
+
 module.exports = function(app) {
 
     let storeDAO = app.dao.storeDAO;
@@ -21,11 +23,14 @@ module.exports = function(app) {
         storeDAO.read(function(error, result) {
 
             if(error) {
-                console.log(error);
+                log.error(error);
+
                 res.status(500).json({
                     'status': false,
                     'errorCode': errorCodeConstant.DATABASE_ERROR
                 });
+
+                return;
             }else {
                 res.status(200).json({
                     'status': true,

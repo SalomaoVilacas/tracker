@@ -7,6 +7,8 @@ const passwordValidation = require('../../resource/validation/password');
 
 const tokenUtility = require('../../resource/utility/token');
 
+const log = require('../../resource/utility/log');
+
 module.exports = function(app) {
 
     let storeDAO = app.dao.storeDAO;
@@ -20,6 +22,8 @@ module.exports = function(app) {
             storeDAO.readByNamePassword(name, password, function(error, result) {
 
                 if(error) {
+                    log.error(error);
+
                     res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
                         'status': false,
                         'errorCode': errorCodeConstant.DATABASE_ERROR
@@ -40,6 +44,8 @@ module.exports = function(app) {
                         tokenUtility.create(store, function(error, token) {
 
                             if(error) {
+                                log.error(error);
+
                                 res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
                                     'status': false,
                                     'errorCode': errorCodeConstant.CREATE_TOKEN_ERROR

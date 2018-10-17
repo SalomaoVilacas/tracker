@@ -14,9 +14,11 @@
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
+    "morgan": "^1.9.1",
     "mqtt": "^2.18.8",
     "socket.io": "^2.1.1",
     "uuid": "^3.3.2",
-    "validator": "^10.8.0"
+    "validator": "^10.8.0",
+    "winston": "^3.1.0"
   }
 }
