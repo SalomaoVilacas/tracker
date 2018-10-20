@@ -33,9 +33,9 @@
                     return false;
                 });
 
-                socket.on('chat message', function(msg) {
+                socket.on('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNkNDZkZjQ1LTg5N2EtNGRhNC05MDg5LWEwYzVjZWE2MGUzNiIsImNpdHkiOiJNYW5hdXMiLCJuYW1lIjoiUG9udGEgTmVncmEiLCJuZWlnaGJvcmhvb2QiOiJTYW50byBBZ29zdGluaG8iLCJudW1iZXIiOiIxMDAxIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJzdGF0ZSI6IkFtYXpvbmFzIiwic3RyZWV0IjoiUG9udGEgTmVncmEiLCJ6aXBfY29kZSI6IjY5MDI3LVhYWCIsImlhdCI6MTUzOTk3OTM5M30.crjp2LrOrnbBKY7vVM4aHgJbJDSvvIFvowx6nKytjIc', function(msg) {
 
-                    $('#messages').append($('<li>').text(msg.message));
+                    $('#messages').append($('<li>').text(msg.type));
                 });
             });
         </script>

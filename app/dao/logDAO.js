@@ -5,21 +5,21 @@ module.exports = function() {
 
     let dao = {};
 
-    dao.create = function(user, callback) {
+    dao.create = function(log, callback) {
 
-        let query = "INSERT INTO test (id, timestamp, local, mode) VALUES ('" + user.id + "', " + user.timestamp + ", '" + user.local + "', '" + user.mode + "')";
+        let query = "INSERT INTO log (id, plataform, log) VALUES (uuid(), '" + log.plataform + "', '" + log.log + "');";
 
         client.execute(query, callback);
     };
 
     dao.read = function(callback) {
 
-        let query = "SELECT * FROM user";
+        let query = "";
 
         client.execute(query, callback);
     };
 
-    dao.update = function(id, user, callback) {
+    dao.update = function(id, log, callback) {
 
         let query = "";
 
@@ -29,13 +29,6 @@ module.exports = function() {
     dao.delete = function(id, callback) {
 
         let query = "";
-
-        client.execute();
-    };
-
-    dao.readById = function(id, callback) {
-
-        let query = "SELECT * FROM test WHERE id='" + id + "';";
 
         client.execute(query, callback);
     };

@@ -8,7 +8,7 @@ module.exports = function() {
     dao.create = function(reading, callback) {
 
 
-        let query = "INSERT INTO reading (id_tag, id_door, type, timestamp) VALUES ('" + reading.id + "', 2db25a82-2a86-4683-9eb2-2c54fc9f0652, '" + reading.mode + "', '" + reading.timestamp + "');";
+        let query = "INSERT INTO reading (id_tag, id_antenna, type, timestamp) VALUES ('" + reading.id + "', " + reading.id_antenna + ", '" + reading.mode + "', '" + reading.timestamp + "');";
 
         client.execute(query, callback);
     };
@@ -36,7 +36,7 @@ module.exports = function() {
 
     dao.readByIdTag = function(id, callback) {
 
-        let query = "SELECT id_door, type FROM reading WHERE id_tag='" + id + "' LIMIT 1;";
+        let query = "SELECT id_antenna, type FROM reading WHERE id_tag='" + id + "' LIMIT 1;";
 
         client.execute(query, callback);
     };

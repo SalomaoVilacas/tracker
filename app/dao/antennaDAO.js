@@ -7,7 +7,7 @@ module.exports = function() {
 
     dao.create = function(event, callback) {
 
-        let query = "INSERT INTO event (id_tag, id_store, type, timestamp) VALUES ('" + event.id_tag + "', " + event.id_store + ", '" + event.type + "', " + event.timestamp + ");";
+        let query = "";
 
         client.execute(query, callback);
     };
@@ -33,9 +33,11 @@ module.exports = function() {
         client.execute(query, callback);
     };
 
-    dao.readByIdTag = function(id, callback) {
+    dao.readById = function(id, callback) {
 
-        let query = "SELECT * FROM event WHERE idTag='" + id + "';";
+        let query = "SELECT id_store FROM antenna WHERE id=" + id;
+
+        client.execute(query, callback);
     };
 
     return dao;

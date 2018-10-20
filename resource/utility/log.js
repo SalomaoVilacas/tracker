@@ -10,22 +10,22 @@ module.exports = winston.createLogger({
         new winston.transports.File({
             'level': 'error',
             'filename': 'resource/log/error.log',
-            'maxsize': 10000
+            'maxsize': 10000000
         }),
         new winston.transports.File({
             'level': 'warn',
             'filename': 'resource/log/warn.log',
-            'maxsize': 10000
+            'maxsize': 10000000
         }),
         new winston.transports.File({
             'level': 'info',
             'filename': 'resource/log/info.log',
-            'maxsize': 10000
+            'maxsize': 10000000
         }),
         new winston.transports.File({
             'level': 'debug',
             'filename': 'resource/log/debug.log',
-            'maxsize': 10000
+            'maxsize': 10000000
         })
     ]
 });
