@@ -5,7 +5,6 @@ const consign = require('consign');
 const morgan = require('morgan');
 
 const serverConstant = require('../resource/constant/server');
-
 const log = require('../resource/utility/log');
 
 module.exports = function() {
@@ -33,6 +32,7 @@ module.exports = function() {
 
     consign({'cwd': 'app'})
     .include('dao')
+    .then('mqtt')
     .then('route')
     .into(app);
 

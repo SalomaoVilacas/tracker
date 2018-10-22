@@ -1,14 +1,11 @@
 const mqtt = require('mqtt');
 
 const mqttConstant = require('../../resource/constant/mqtt');
-
 const log = require('../../resource/utility/log');
-
 const readingDAO = require('../dao/readingDAO')();
 const eventDAO = require('../dao/eventDAO')();
 const antennaDAO = require('../dao/antennaDAO')();
 const listenerDAO = require('../dao/listenerDAO')();
-
 const client  = mqtt.connect('mqtt://' + mqttConstant.IP_BROKER);
 
 module.exports = function(io) {

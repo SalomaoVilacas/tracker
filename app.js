@@ -6,7 +6,6 @@ const serverConstant = require('./resource/constant/server');
 
 require('./config/database')();
 require('./resource/utility/socket')(io);
-require('./app/mqtt/readRFID')(io);
 
 http.listen(serverConstant.PORT, () => {
 

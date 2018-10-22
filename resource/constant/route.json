@@ -1,0 +1,14 @@
+{
+    "LOGIN": "/login",
+    "SIGNUP": "/signup",
+
+    "CREATE_STORE": "/store",
+    "READ_STORE": "/store",
+    "UPDATE_STORE": "/store",
+    "DELETE_STORE": "/store",
+
+    "CREATE_LOG": "/log",
+
+    "CREATE_LISTENER": "/listener",
+    "DELETE_LISTENER": "/listener"
+}
