@@ -13,6 +13,7 @@ module.exports = function() {
 
     app.set('secret', serverConstant.SECRET);
 
+    app.use(express.static('app/public'));
     app.use(morgan('common', {
         'stream': {
             'write': function(message) {
@@ -31,7 +32,8 @@ module.exports = function() {
     app.use(cors());
 
     consign({'cwd': 'app'})
-    .include('dao')
+    .include('model')
+    .then('dao')
     .then('mqtt')
     .then('route')
     .into(app);

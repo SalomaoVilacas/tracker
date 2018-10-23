@@ -1,36 +1,28 @@
-const client = require('../../config/database')();
-const uuid = require('uuid/v1');
+const mongoose = require('mongoose');
 
-module.exports = function() {
+module.exports = function(app) {
 
     let dao = {};
+    const model = mongoose.model('log');
 
-    dao.create = function(log, callback) {
+    dao.create = function(listener, callback) {
 
-        let query = "INSERT INTO log (id, plataform, log) VALUES (uuid(), '" + log.plataform + "', '" + log.log + "');";
-
-        client.execute(query, callback);
+        model.create(listener, callback);
     };
 
     dao.read = function(callback) {
 
-        let query = "";
-
-        client.execute(query, callback);
+        model.find({}, callback);
     };
 
-    dao.update = function(id, log, callback) {
+    dao.update = function(listener, callback) {
 
-        let query = "";
-
-        client.execute();
+        model.update({'id': listener.id}, listener, callback);
     };
 
     dao.delete = function(id, callback) {
 
-        let query = "";
-
-        client.execute(query, callback);
+        model.remove({'id': id}, callback);
     };
 
     return dao;

@@ -1,43 +1,28 @@
-const client = require('../../config/database')();
-const uuid = require('uuid/v1');
+const mongoose = require('mongoose');
 
-module.exports = function() {
+module.exports = function(app) {
 
     let dao = {};
+    const model = mongoose.model('listener');
 
     dao.create = function(listener, callback) {
 
-        let query = "INSERT INTO listener (emit_event, id_store) VALUES ('" + listener.emit_event + "', " + listener.id_store + ");";
-
-        client.execute(query, callback);
+        model.create(listener, callback);
     };
 
     dao.read = function(callback) {
 
-        let query = "";
-
-        client.execute(query, callback);
+        model.find({}, callback);
     };
 
-    dao.update = function(id, user, callback) {
+    dao.update = function(listener, callback) {
 
-        let query = "";
-
-        client.execute();
+        model.update({'id': listener.id}, listener, callback);
     };
 
-    dao.delete = function(token, callback) {
+    dao.delete = function(id, callback) {
 
-        let query = "DELETE FROM listener WHERE emit_event='" + token + "';";
-
-        client.execute(query, callback);
-    };
-
-    dao.readByIdStore = function(id_store, callback) {
-
-        let query = "SELECT emit_event FROM listener WHERE id_store=" + id_store + " ALLOW FILTERING;";
-
-        client.execute(query, callback);
+        model.remove({'id': id}, callback);
     };
 
     return dao;

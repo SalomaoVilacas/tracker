@@ -1,43 +1,28 @@
-const client = require('../../config/database')();
-const uuid = require('uuid/v1');
+const mongoose = require('mongoose');
 
-module.exports = function() {
+module.exports = function(app) {
 
     let dao = {};
+    const model = mongoose.model('store');
 
-    dao.create = function(user, callback) {
+    dao.create = function(listener, callback) {
 
-        let query = "";
-
-        client.execute(query, callback);
+        model.create(listener, callback);
     };
 
     dao.read = function(callback) {
 
-        let query = "SELECT id, name FROM store";
-
-        client.execute(query, callback);
+        model.find({}, callback);
     };
 
-    dao.update = function(id, user, callback) {
+    dao.update = function(listener, callback) {
 
-        let query = "";
-
-        client.execute();
+        model.update({'id': listener.id}, listener, callback);
     };
 
     dao.delete = function(id, callback) {
 
-        let query = "";
-
-        client.execute();
-    };
-
-    dao.readByNamePassword = function(name, password, callback) {
-
-        let query = "SELECT * FROM store WHERE name = '" + name + "' AND password = '" + password + "' ALLOW FILTERING;";
-
-        client.execute(query, callback);
+        model.remove({'id': id}, callback);
     };
 
     return dao;

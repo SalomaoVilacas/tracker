@@ -1,10 +1,8 @@
 const routeConstant = require('../../resource/constant/route');
 const errorCodeConstant = require('../../resource/constant/errorCode');
 const httpStatusCodeConstant = require('../../resource/constant/httpStatusCode');
-
 const tokenValidation = require('../../resource/validation/token');
-
-const log = require('../../resource/utility/log');
+const logger = require('../../resource/utility/log');
 
 module.exports = function(app) {
 
@@ -12,24 +10,22 @@ module.exports = function(app) {
 
     app.post(routeConstant.CREATE_LISTENER, tokenValidation, function(req, res) {
 
-        let emit_event = req.body.token;
-        let id_store = req.body.id_store;
+        let listener = {};
+        listener.token = req.body.token;
+        listener.idStore = req.body.idStore;
 
-        listenerDAO.create({'emit_event': emit_event, 'id_store': id_store}, function(error) {
+        listenerDAO.create(listener, function(error) {
 
             if(error) {
-                log.error(error);
+                logger.error(error);
 
                 res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
-                    'status': false,
                     'errorCode': errorCodeConstant.DATABASE_ERROR
                 });
 
                 return;
             }else {
-                res.status(httpStatusCodeConstant.CREATED).json({
-                    'status': true
-                });
+                res.status(httpStatusCodeConstant.CREATED).json();
 
                 return;
             }
@@ -43,18 +39,15 @@ module.exports = function(app) {
         listenerDAO.delete(token, function(error) {
 
             if(error) {
-                log.error(error);
+                logger.error(error);
 
                 res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
-                    'status': false,
                     'errorCode': errorCodeConstant.DATABASE_ERROR
                 });
 
                 return;
             }else {
-                res.status(httpStatusCodeConstant.CREATED).json({
-                    'status': true
-                });
+                res.status(httpStatusCodeConstant.CREATED).json();
 
                 return;
             }

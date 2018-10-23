@@ -1,9 +1,31 @@
-const cassandra = require('cassandra-driver');
-const databaseConstant = require('../resource/constant/database');
+module.exports = function(uri) {
 
-const client = new cassandra.Client({'contactPoints': [databaseConstant.IP_DB], 'keyspace': databaseConstant.DB});
+    let mongoose = require('mongoose');
 
-module.exports = function() {
+    mongoose.connect('mongodb://' + uri, {'useNewUrlParser': true});
 
-    return client;
+    mongoose.connection.on('connected', function() {
+
+        console.log('Conectado ao MongoDB');
+    });
+
+    mongoose.connection.on('error', function(error) {
+
+        console.log('Erro na conexão: ' + error);
+    });
+
+    mongoose.connection.on('disconnected', function() {
+
+        console.log('Desconectado do MongoDB');
+    });
+
+    process.on('SIGINT', function() {
+
+        mongoose.connection.close(function() {
+
+            console.log('Aplicação terminada, conexão fechada');
+            process.exit(0);
+        });
+
+    });
 };

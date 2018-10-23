@@ -1,13 +1,10 @@
 const routeConstant = require('../../resource/constant/route');
 const errorCodeConstant = require('../../resource/constant/errorCode');
 const httpStatusCodeConstant = require('../../resource/constant/httpStatusCode');
-
 const nameValidation = require('../../resource/validation/name');
 const passwordValidation = require('../../resource/validation/password');
-
 const tokenUtility = require('../../resource/utility/token');
-
-const log = require('../../resource/utility/log');
+const logger = require('../../resource/utility/log');
 
 module.exports = function(app) {
 
@@ -22,10 +19,9 @@ module.exports = function(app) {
             storeDAO.readByNamePassword(name, password, function(error, result) {
 
                 if(error) {
-                    log.error(error);
+                    logger.error(error);
 
                     res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
-                        'status': false,
                         'errorCode': errorCodeConstant.DATABASE_ERROR
                     });
 
@@ -33,7 +29,6 @@ module.exports = function(app) {
                 }else {
                     if(result.rowLength == 0) {
                         res.status(httpStatusCodeConstant.UNAUTHORIZED).json({
-                            'status': false,
                             'errorCode': errorCodeConstant.AUTHENTICATION_ERROR
                         });
 
@@ -44,20 +39,16 @@ module.exports = function(app) {
                         tokenUtility.create(store, function(error, token) {
 
                             if(error) {
-                                log.error(error);
+                                logger.error(error);
 
                                 res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
-                                    'status': false,
                                     'errorCode': errorCodeConstant.CREATE_TOKEN_ERROR
                                 });
 
                                 return;
                             }else {
                                 res.status(httpStatusCodeConstant.CREATED).json({
-                                    'status': true,
-                                    'results': {
-                                        'token': token
-                                    }
+                                    'token': token
                                 });
                             }
                         });
@@ -66,7 +57,6 @@ module.exports = function(app) {
             });
         }else {
             res.status(httpStatusCodeConstant.BAD_REQUEST).json({
-                'status': false,
                 'errorCode': errorCodeConstant.INVALID_REQUEST
             });
 
