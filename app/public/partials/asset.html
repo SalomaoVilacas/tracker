@@ -1,0 +1,89 @@
+<div id="asset">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <button id="buttonUpdateAssetList" type="button" class="btn btn-default" aria-label="Left Align" ng-click="updateAssetList()">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true" ></span>
+                </button>
+                <button id="buttonFilterAssetList" type="button" class="btn btn-default" aria-label="Left Align" ng-click="openModalFilterAssetList()">
+                    <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+                </button>
+                <label>Filtro: <input ng-model="filter"></label>
+            </div>          
+            <div class="col-lg-1 col-lg-offset-9">
+                <span>{{amountAssets}}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="line">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <table class="table table-hover">
+                                <thead >
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Descrição</th>
+                                        <th>Local</th>
+                                        <th>Vinculado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="asset in assets | filter: filter">
+                                        <td>{{asset.id}}</td>
+                                        <td>{{asset.name}}</td>
+                                        <td>{{asset.type}}</td>
+                                        <td>{{asset.description}}</td>
+                                        <td>{{asset.local}}</td>
+                                        <td>{{asset.linked}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal do filtra do lista de ativos -->
+    <div class="modal fade" id="modalFilterAssetList" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Filtro</h4>
+                </div>
+                <div class="modal-body">
+                    <form ng-submit="filterAssetList()">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input type="name" class="form-control" ng-model="assetFilterParameter.id" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="name" class="form-control" ng-model="assetFilterParameter.name">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo</label>
+                            <input type="name" class="form-control" ng-model="assetFilterParameter.type">
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <input type="name" class="form-control" ng-model="assetFilterParameter.description">
+                        </div>
+                        <div class="form-group">
+                            <label>Local</label>
+                            <input type="name" class="form-control" ng-model="assetFilterParameter.local">
+                        </div>
+                        <button type="submit" class="btn btn-success">Filtrar</button>
+                        <button type="submit" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

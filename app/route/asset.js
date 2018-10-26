@@ -1,6 +1,7 @@
 const routeConstant = require('../../resource/constant/route');
 const errorCodeConstant = require('../../resource/constant/errorCode');
 const httpStatusCodeConstant = require('../../resource/constant/httpStatusCode');
+const assetConstant = require('../../resource/constant/asset');
 const tokenValidation = require('../../resource/validation/token');
 const logger = require('../../resource/utility/log');
 
@@ -8,12 +9,12 @@ module.exports = function(app) {
 
     let assetDAO = app.dao.assetDAO;
 
-    app.post(routeConstant.CREATE_ASSET, tokenValidation, function(req, res) {
+    app.post(routeConstant.CREATE_ASSET, function(req, res) {
 
         let asset = req.body.asset;
-        asset.status = 1;
+        asset.status = [assetConstant.STATUS_AVAILABLE, new Date().getTime()];
 
-        assetDAO.create(asset, function(error) {
+        assetDAO.readById(asset.id, function(error, result) {
 
             if(error) {
                 logger.error(error);
@@ -24,16 +25,56 @@ module.exports = function(app) {
 
                 return;
             }else {
-                res.status(httpStatusCodeConstant.RESET_CONTENT).json();
+                if(result) {
+                    if(result.status[0] == assetConstant.STATUS_AVAILABLE) {
+                        res.status(httpStatusCodeConstant.FORBIDDEN).json({
+                            'errorCode': errorCodeConstant.ID_ALREADY_EXIST
+                        });
+        
+                        return;
+                    }else {
+                        assetDAO.update(asset, function(error, result) {
 
-                return;
+                            if(error) {
+                                logger.error(error);
+
+                                res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
+                                    'errorCode': errorCodeConstant.DATABASE_ERROR
+                                });
+                
+                                return;
+                            }else {
+                                res.status(httpStatusCodeConstant.RESET_CONTENT).json();
+            
+                                return;
+                            }
+                        });
+                    }
+                }else {
+                    assetDAO.create(asset, function(error) {
+
+                        if(error) {
+                            logger.error(error);
+            
+                            res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
+                                'errorCode': errorCodeConstant.DATABASE_ERROR
+                            });
+            
+                            return;
+                        }else {
+                            res.status(httpStatusCodeConstant.RESET_CONTENT).json();
+            
+                            return;
+                        }
+                    });
+                }
             }
         });
     });
 
-    app.get(routeConstant.READ_ASSET, tokenValidation, function(req, res) {
+    app.get(routeConstant.READ_ASSET, function(req, res) {
 
-        assetDAO.read(function(error, result) {
+        assetDAO.readAvailableDocuments(function(error, result) {
 
             if(error) {
                 logger.error(error);
@@ -53,12 +94,13 @@ module.exports = function(app) {
         });
     });
 
-    app.put(routeConstant.UPDATE_ASSET, tokenValidation, function(req, res) {
+    app.put(routeConstant.UPDATE_ASSET, function(req, res) {
 
+        let id = req.params.id;
         let asset = req.body.asset;
-        asset.status = 1;
+        asset.status = [assetConstant.STATUS_AVAILABLE, new Date().getTime()];
 
-        assetDAO.update(asset, function(error) {
+        assetDAO.readById(id, function(error, result) {
 
             if(error) {
                 logger.error(error);
@@ -69,18 +111,47 @@ module.exports = function(app) {
 
                 return;
             }else {
-                res.status(httpStatusCodeConstant.NO_CONTENT).json();
+                if(result) {
+                    if(result.status[0] == assetConstant.STATUS_AVAILABLE) {
+                        assetDAO.update(id, asset, function(error) {
 
-                return;
+                            if(error) {
+                                logger.error(error);
+                
+                                res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
+                                    'errorCode': errorCodeConstant.DATABASE_ERROR
+                                });
+                
+                                return;
+                            }else {
+                                res.status(httpStatusCodeConstant.NO_CONTENT).json();
+                
+                                return;
+                            }
+                        });
+                    }else {
+                        res.status(httpStatusCodeConstant.NOT_FOUND).json({
+                            "errorCode": errorCodeConstant.RESOURCE_DELETED
+                        });
+
+                        return;
+                    }
+                }else {
+                    res.status(httpStatusCodeConstant.NOT_FOUND).json({
+                        "errorCode": errorCodeConstant.RESOURCE_NOT_FOUNT
+                    });
+
+                    return;
+                }
             }
         });
     });
 
-    app.delete(routeConstant.DELETE_LISTENER, tokenValidation, function(req, res) {
+    app.delete(routeConstant.DELETE_ASSET, function(req, res) {
 
-        let id = req.query.id;
+        let id = req.params.id;
 
-        assetDAO.delete(id, function(error) {
+        assetDAO.readById(id, function(error, result) {
 
             if(error) {
                 logger.error(error);
@@ -91,18 +162,47 @@ module.exports = function(app) {
 
                 return;
             }else {
-                res.status(httpStatusCodeConstant.RESET_CONTENT).json();
+                if(result) {
+                    if(result.status[0] == assetConstant.STATUS_AVAILABLE) {
+                        assetDAO.disable(id, function(error) {
 
-                return;
+                            if(error) {
+                                logger.error(error);
+                
+                                res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
+                                    'errorCode': errorCodeConstant.DATABASE_ERROR
+                                });
+                
+                                return;
+                            }else {
+                                res.status(httpStatusCodeConstant.RESET_CONTENT).json();
+                
+                                return;
+                            }
+                        });
+                    }else {
+                        res.status(httpStatusCodeConstant.FORBIDDEN).json({
+                            "errorCode": errorCodeConstant.RESOURCE_DELETED
+                        });
+
+                        return;
+                    }
+                }else {
+                    res.status(httpStatusCodeConstant.NOT_FOUND).json({
+                        "errorCode": errorCodeConstant.RESOURCE_NOT_FOUNT
+                    });
+
+                    return;
+                }
             }
         });
     });
 
     app.get(routeConstant.READ_ASSET_BY_ID, function(req, res) {
 
-        let id = req.param.id;
+        let id = req.params.id;
 
-        assetDAO.readById(id, function(error, result) {
+        assetDAO.readAvailableDocumentsById(id, function(error, result) {
 
             if(error) {
                 logger.error(error);
@@ -124,10 +224,11 @@ module.exports = function(app) {
 
     app.patch(routeConstant.PARTIAL_UPDATE_ASSET, function(req, res) {
 
+        let id = req.params.id;
         let asset = req.body.asset;
-        asset.status = 1;
+        asset.status = [assetConstant.STATUS_AVAILABLE, new Date().getTime()];
 
-        assetDAO.partialUpdate(asset, function(error) {
+        assetDAO.readById(id, function(error, result) {
 
             if(error) {
                 logger.error(error);
@@ -138,10 +239,63 @@ module.exports = function(app) {
 
                 return;
             }else {
-                res.status(httpStatusCodeConstant.NO_CONTENT).json();
+                if(result) {
+                    if(result.status[0] == assetConstant.STATUS_AVAILABLE) {
+                        assetDAO.partialUpdate(id, asset, function(error) {
+
+                            if(error) {
+                                logger.error(error);
+                
+                                res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
+                                    'errorCode': errorCodeConstant.DATABASE_ERROR
+                                });
+                
+                                return;
+                            }else {
+                                res.status(httpStatusCodeConstant.NO_CONTENT).json();
+                
+                                return;
+                            }
+                        });
+                    }else {
+                        res.status(httpStatusCodeConstant.NOT_FOUND).json({
+                            "errorCode": errorCodeConstant.RESOURCE_DELETED
+                        });
+
+                        return;
+                    }
+                }else {
+                    res.status(httpStatusCodeConstant.NOT_FOUND).json({
+                        "errorCode": errorCodeConstant.RESOURCE_NOT_FOUNT
+                    });
+
+                    return;
+                }
+            }
+        });
+    });
+
+    app.post(routeConstant.FILTER_ASSET_LIST, function(req, res) {
+
+        let assetFilterParameter = req.body.assetFilterParameter;
+
+        assetDAO.filterAvailableDocuments(assetFilterParameter, function(error, result) {
+
+            if(error) {
+                logger.error(error);
+
+                res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
+                    'errorCode': errorCodeConstant.DATABASE_ERROR
+                });
+
+                return;
+            }else {
+                res.status(httpStatusCodeConstant.ACCEPTED).json({
+                    'assets': result
+                });
 
                 return;
             }
         });
     });
-}; 
+};

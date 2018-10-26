@@ -19,8 +19,9 @@ module.exports = {
     // ASSET
     "CREATE_ASSET": "/asset",
     "READ_ASSET": "/asset",
-    "UPDATE_ASSET": "/asset",
-    "DELETE_ASSET": "/asset",
+    "UPDATE_ASSET": "/asset/:id",
+    "DELETE_ASSET": "/asset/:id",
     "READ_ASSET_BY_ID": "/asset/:id",
-    "PARTIAL_UPDATE_ASSET": "/asset"
+    "PARTIAL_UPDATE_ASSET": "/asset/:id",
+    "FILTER_ASSET_LIST": "/asset/filter"
 };

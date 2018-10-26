@@ -17,5 +17,6 @@ module.exports = {
     "longitude": {
         "type": Number,
         "required": true
-    }
+    },
+    "status": [Number] //[position0: (1-available || 2-unavailable), position1: modification date]
 };

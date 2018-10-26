@@ -5,6 +5,10 @@ module.exports = {
         "type": String,
         "required": true
     },
+    "idTag": {
+        "type": String,
+        "required": false
+    },
     "name": {
         "type": String,
         "required": true
@@ -31,14 +35,11 @@ module.exports = {
                 "type": String,
                 "required": true
             },
-            "timestamp": {
-                "type": Number,
+            "creationDate": {
+                "type": Date,
                 "required": true
             }
         }
     ],
-    "status": {
-        "type": Number,
-        "required": true
-    }
+    "status": [Number] //[position0: (1-available || 2-unavailable || 3-noLink), position1: modification date]
 };

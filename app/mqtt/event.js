@@ -14,6 +14,6 @@ mqttClient.on('connect', function() {
 mqttClient.on('message', function(topic, message) {
 
     message = JSON.parse(message.toString());
-    console.log(topic);
-    console.log(message);
+    // console.log(topic);
+    // console.log(message);
 });
