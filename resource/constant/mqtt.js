@@ -1,4 +1,4 @@
 module.exports = {
-    "IP": "192.168.20.100",
+    "IP": "192.168.20.77",
     "TOPIC": "iotech/rfid/#"
 };

@@ -33,7 +33,10 @@ module.exports = function(app) {
         
                         return;
                     }else {
-                        assetDAO.update(asset, function(error, result) {
+                        let id = asset.id;
+                        delete asset.id;
+
+                        assetDAO.update(id, asset, function(error) {
 
                             if(error) {
                                 logger.error(error);

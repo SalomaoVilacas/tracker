@@ -42,7 +42,7 @@ module.exports = function(app) {
     };
 
     dao.partialUpdate = function(id, asset, callback) {
-
+        
         model.updateOne({'id': id}, {$set: asset}, callback);
     };
 

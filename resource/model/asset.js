@@ -5,7 +5,7 @@ module.exports = {
         "type": String,
         "required": true
     },
-    "idTag": {
+    "idAssetReference": {
         "type": String,
         "required": false
     },
@@ -41,5 +41,5 @@ module.exports = {
             }
         }
     ],
-    "status": [Number] //[position0: (1-available || 2-unavailable || 3-noLink), position1: modification date]
+    "status": [Number] //[position0: (1-available || 2-unavailable), position1: modification date]
 };

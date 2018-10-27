@@ -16,7 +16,7 @@ angular.module("Site")
                 $scope.assets = result.data.assets;
     
                 for(let i = 0; i < $scope.assets.length; i++) {
-                    $scope.assets[i].linked = $scope.assets[i].idTag ? "Sim" : "Não";
+                    $scope.assets[i].linked = $scope.assets[i].idAssetReference ? "Sim" : "Não";
                 }
     
                 $scope.amountAssets = $scope.assets.length;
