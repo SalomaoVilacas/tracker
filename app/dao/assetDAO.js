@@ -56,5 +56,20 @@ module.exports = function(app) {
         model.find({$and: [assetFilterParameter, {'status.0': assetConstant.STATUS_AVAILABLE}]}, '-_id -status -historic', callback);
     };
 
+    dao.readLastPositionEventHistoric = function(id, callback) {
+
+        model.findOne({'id': id}, {"eventHistoric": {$slice: -1}}, callback);
+    };
+
+    dao.partialUpdateLastPositionEventHistoric = function(id, asset, callback) {
+
+        model.updateOne({'id': id, 'eventHistoric.type': 'scan_in'}, {'eventHistoric.$.creationDate': new Date().getTime()}, callback);
+    };
+
+    dao.createEvent = function(id, event, callback) {
+
+        model.updateOne({'id': id}, {$push: {'eventHistoric': event}}, callback);
+    };
+
     return dao;
 };

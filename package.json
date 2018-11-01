@@ -9,6 +9,7 @@
   "author": "Salomão Vilaça",
   "license": "ISC",
   "dependencies": {
+    "apidoc": "^0.17.6",
     "cassandra-driver": "^3.5.0",
     "consign": "^0.1.6",
     "cors": "^2.8.4",

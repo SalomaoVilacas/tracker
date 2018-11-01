@@ -25,9 +25,9 @@ module.exports = {
         "type": String,
         "required": true
     },
-    "historic": [
+    "eventHistoric": [
         {
-            "event": {
+            "type": {
                 "type": String,
                 "required": true
             },

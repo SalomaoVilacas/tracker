@@ -13,7 +13,8 @@ module.exports = function() {
 
     app.set('secret', serverConstant.SECRET);
 
-    app.use(express.static('app/public'));
+    app.use(express.static('app/public/site'));
+    app.use(express.static('app/public/apidoc'));
     app.use(morgan('common', {
         'stream': {
             'write': function(message) {
