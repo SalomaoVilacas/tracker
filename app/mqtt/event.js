@@ -6,6 +6,8 @@ const assetDAO = require('../dao/assetDAO')();
 const mqttClient  = require('../../config/mqtt');
 
 var tagScanMode = {};
+var initialTime,
+    finalTime;
 
 mqttClient.on('connect', function() {
 
@@ -20,7 +22,11 @@ mqttClient.on('connect', function() {
 
 mqttClient.on('message', function(topic, event) {
 
+    initialTime = new Date().getTime();
     event = JSON.parse(event.toString());
+
+    let date = new Date(0);
+    console.log(initialTime - date.setUTCSeconds(event.timestamp));
 
     checkAssetById(event.id, function(exist, available) {
 
@@ -153,6 +159,8 @@ function createScanInEvent(event) {
             if(result.eventHistoric.length > 0 && result.eventHistoric[0].type == 'scan_in') {
                 clearTimeout(tagScanMode[id]);
                 tagScanMode[id] = setTimeout(expiredScanInEvent, 60 * 1000, id, event.local);
+                // finalTime = new Date().getTime();
+                // console.log(finalTime - initialTime);
             }else {
                 assetDAO.createEvent(id, event, function(error) {
 
@@ -160,6 +168,8 @@ function createScanInEvent(event) {
                     else {
                         clearTimeout(tagScanMode[id]);
                         tagScanMode[id] = setTimeout(expiredScanInEvent, 60 * 1000, id, event.local);
+                        // finalTime = new Date().getTime();
+                        // console.log(finalTime - initialTime);
                     }
                 });
             }
@@ -182,6 +192,10 @@ function createScanOutEvent(event) {
                 assetDAO.createEvent(id, event, function(error) {
 
                     if(error) logger.error(logMessage.error(error, __filename, 'assetDAO.creatEvent()'));
+                    // else {
+                    //     finalTime = new Date().getTime();
+                    //     console.log(finalTime - initialTime);
+                    // }
                 });
             }else {
                 logger.error(logMessage.error('Foi gerado um evento de SCAN_OUT sem um evento de SCAN_IN prévio', __filename, 'Buscar evento SCAN_IN'));
@@ -201,4 +215,6 @@ function expiredScanInEvent(id, local) {
 
         if(error) logger.error(logMessage.error(error, __filename, 'assetDAO.createEvent()'));
     });
+
+    clearTimeout(tagScanMode[id]);
 };

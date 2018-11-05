@@ -33,12 +33,12 @@ module.exports = function(app) {
 
     dao.readAvailableDocuments = function(callback) {
 
-        model.find({'status.0': assetConstant.STATUS_AVAILABLE}, '-_id -status -historic', callback);
+        model.find({'status.0': assetConstant.STATUS_AVAILABLE}, '-_id -status -eventHistoric', callback);
     };
 
     dao.readAvailableDocumentsById = function(id, callback) {
 
-        model.findOne({'id': id, 'status.0': assetConstant.STATUS_AVAILABLE}, '-_id -status -historic', callback);
+        model.findOne({'id': id, 'status.0': assetConstant.STATUS_AVAILABLE}, '-_id -status -eventHistoric', callback);
     };
 
     dao.partialUpdate = function(id, asset, callback) {
@@ -53,7 +53,7 @@ module.exports = function(app) {
 
     dao.filterAvailableDocuments = function(assetFilterParameter, callback) {
 
-        model.find({$and: [assetFilterParameter, {'status.0': assetConstant.STATUS_AVAILABLE}]}, '-_id -status -historic', callback);
+        model.find({$and: [assetFilterParameter, {'status.0': assetConstant.STATUS_AVAILABLE}]}, '-_id -status -eventHistoric', callback);
     };
 
     dao.readLastPositionEventHistoric = function(id, callback) {
@@ -69,6 +69,11 @@ module.exports = function(app) {
     dao.createEvent = function(id, event, callback) {
 
         model.updateOne({'id': id}, {$push: {'eventHistoric': event}}, callback);
+    };
+
+    dao.readAvailableDocumentsVisible = function(local, timestamp, callback) {
+
+        model.find({}, {"eventHistoric": {$slice: -1}}, callback);
     };
 
     return dao;

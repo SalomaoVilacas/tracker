@@ -23,5 +23,6 @@ module.exports = {
     "DELETE_ASSET": "/asset/:id",
     "READ_ASSET_BY_ID": "/asset/:id",
     "PARTIAL_UPDATE_ASSET": "/asset/:id",
-    "FILTER_ASSET_LIST": "/asset/filter"
+    "FILTER_ASSET_LIST": "/asset/filter",
+    "READ_VISIBLE_TAGS": '/asset/visible'
 };

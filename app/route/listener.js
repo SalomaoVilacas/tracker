@@ -8,6 +8,27 @@ module.exports = function(app) {
 
     let listenerDAO = app.dao.listenerDAO;
 
+    /**
+     * @api {post} /listener Rota para a criação de um listener
+     * 
+     * @apiName Criação
+     * @apiGroup Listener
+     * @apiPermission admin
+     * 
+     * @apiParam {String} token O token para validação do usuário
+     * @apiParam {String} idLocal O id do local cujo usuário quer monitorar
+     * 
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 201 Created
+     * 
+     * @apiError 1 Ocorreu um erro no banco de dados
+     * 
+     * @apiErrorExample Error-Response 1:
+     *     HTTP/1.1 500 Internal Server Error
+     *     {
+     *         "errorCode": "1"
+     *     }
+     */
     app.post(routeConstant.CREATE_LISTENER, tokenValidation, function(req, res) {
 
         let listener = {};
