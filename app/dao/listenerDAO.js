@@ -20,9 +20,14 @@ module.exports = function(app) {
         model.update({'id': listener.id}, listener, callback);
     };
 
-    dao.delete = function(id, callback) {
+    dao.delete = function(token, callback) {
 
-        model.remove({'id': id}, callback);
+        model.remove({'token': token}, callback);
+    };
+
+    dao.readByToken = function(token, callback) {
+
+        model.findOne({'token': token}, callback);
     };
 
     return dao;

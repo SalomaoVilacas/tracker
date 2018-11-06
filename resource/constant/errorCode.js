@@ -7,5 +7,6 @@ module.exports = {
     "INVALID_TOKEN": 6,
     "ID_ALREADY_EXIST": 7,
     "RESOURCE_DELETED": 8,
-    "RESOURCE_NOT_FOUNT": 9
+    "RESOURCE_NOT_FOUNT": 9,
+    "TOKEN_ALREADY_EXIST": 10,
 };

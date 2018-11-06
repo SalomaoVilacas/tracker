@@ -6,7 +6,11 @@ module.exports = {
         "required": true
     },
     "idStore": {
-        "type": mongoose.Types.ObjectId,
+        "type": String,
+        "required": true
+    },
+    "department": {
+        "type": String,
         "required": true
     }
 };

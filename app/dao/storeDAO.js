@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
+const storeConstant = require('../../resource/constant/store');
 
 module.exports = function(app) {
 
     let dao = {};
     const model = mongoose.model('store');
 
-    dao.create = function(listener, callback) {
+    dao.create = function(store, callback) {
 
-        model.create(listener, callback);
+        model.create(store, callback);
     };
 
     dao.read = function(callback) {
@@ -23,6 +24,16 @@ module.exports = function(app) {
     dao.delete = function(id, callback) {
 
         model.remove({'id': id}, callback);
+    };
+
+    dao.readByNamePassword = function(name, password, callback) {
+
+        model.findOne({'status.0': storeConstant.STATUS_AVAILABLE, 'name': name, 'password': password}, callback);
+    };
+
+    dao.readAvailableDocuments = function(callback) {
+
+        model.find({'status.0': storeConstant.STATUS_AVAILABLE}, '-_id id name', callback);
     };
 
     return dao;

@@ -33,8 +33,9 @@
                     return false;
                 });
 
-                socket.on('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNkNDZkZjQ1LTg5N2EtNGRhNC05MDg5LWEwYzVjZWE2MGUzNiIsImNpdHkiOiJNYW5hdXMiLCJuYW1lIjoiUG9udGEgTmVncmEiLCJuZWlnaGJvcmhvb2QiOiJTYW50byBBZ29zdGluaG8iLCJudW1iZXIiOiIxMDAxIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJzdGF0ZSI6IkFtYXpvbmFzIiwic3RyZWV0IjoiUG9udGEgTmVncmEiLCJ6aXBfY29kZSI6IjY5MDI3LVhYWCIsImlhdCI6MTUzOTk3OTM5M30.crjp2LrOrnbBKY7vVM4aHgJbJDSvvIFvowx6nKytjIc', function(msg) {
+                socket.on('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXBhcnRtZW50IjpbInNhbGFfMSIsInNhbGFfMiJdLCJzdGF0dXMiOlsxLDE1NDE0MjQ1NjM3ODVdLCJfaWQiOiI1YmUwNWUyMGE4OWY1NTA2NDYyOGUyOTMiLCJpZCI6ImlvdGVjaF90ZXN0IiwibmFtZSI6ImlvdGVjaCIsInBhc3N3b3JkIjoiMTIzNDU2IiwibGF0aXR1ZGUiOi0zLjA4Njc3NywibG9uZ2l0dWRlIjotNjAuMDE2NTI2LCJpYXQiOjE1NDE0NDM3MzZ9.oPmbU4qq_x4Nz_rvz_RA9L8ffTtUvdgoRWIInZJi7mo', function(msg) {
 
+                    console.log(msg);
                     $('#messages').append($('<li>').text(msg.type));
                 });
             });

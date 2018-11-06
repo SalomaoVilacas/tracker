@@ -2,10 +2,14 @@ const mongoose = require('mongoose');
 
 module.exports = {
     "id": {
-        "type": mongoose.Types.ObjectId,
+        "type": String,
         "required": true
     },
     "name": {
+        "type": String,
+        "required": true
+    },
+    "password": {
         "type": String,
         "required": true
     },

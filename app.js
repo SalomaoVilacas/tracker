@@ -5,6 +5,8 @@ const io = require('socket.io')(http);
 const serverConstant = require('./resource/constant/server');
 const databaseConstant = require('./resource/constant/database');
 
+app.set('io', io);
+
 require('./config/database')(databaseConstant.IP + ':' + databaseConstant.PORT + '/' + databaseConstant.DB);
 require('./resource/utility/socket')(io);
 

@@ -2,6 +2,7 @@ const routeConstant = require('../../resource/constant/route');
 const errorCodeConstant = require('../../resource/constant/errorCode');
 const httpStatusCodeConstant = require('../../resource/constant/httpStatusCode');
 const tokenValidation = require('../../resource/validation/token');
+const logMessage = require('../../resource/utility/logMessage');
 const logger = require('../../resource/utility/log');
 
 module.exports = function(app) {
@@ -34,33 +35,46 @@ module.exports = function(app) {
         let listener = {};
         listener.token = req.body.token;
         listener.idStore = req.body.idStore;
+        listener.department = req.body.department;
 
-        listenerDAO.create(listener, function(error) {
+        listenerDAO.readByToken(listener.token, function(error, result) {
 
-            if(error) {
-                logger.error(error);
+            if(error) logger.error(logMessage.error(error, __filename, 'listenerDAO.readByToken()'));
+            else {
+                if(!result) {
+                    listenerDAO.create(listener, function(error) {
 
-                res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
-                    'errorCode': errorCodeConstant.DATABASE_ERROR
-                });
+                        if(error) {
+                            logger.error(logMessage.error(error, __filename, 'listenerDAO.create()'));
+            
+                            res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
+                                'errorCode': errorCodeConstant.DATABASE_ERROR
+                            });
+            
+                            return;
+                        }else {
+                            res.status(httpStatusCodeConstant.CREATED).json();
+            
+                            return;
+                        }
+                    });
+                }else {
+                    res.status(httpStatusCodeConstant.CREATED).json();
 
-                return;
-            }else {
-                res.status(httpStatusCodeConstant.CREATED).json();
-
-                return;
+                    return;
+                }
             }
         });
     });
 
     app.delete(routeConstant.DELETE_LISTENER, function(req, res) {
 
-        let token = req.body.token;
+        let token = req.query.token;
 
         listenerDAO.delete(token, function(error) {
 
             if(error) {
-                logger.error(error);
+                logger.error(logMessage.error(error, __filename, 'listenerDAO.delete()'));
 
                 res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
                     'errorCode': errorCodeConstant.DATABASE_ERROR

@@ -4,6 +4,7 @@ const httpStatusCodeConstant = require('../../resource/constant/httpStatusCode')
 const nameValidation = require('../../resource/validation/name');
 const passwordValidation = require('../../resource/validation/password');
 const tokenUtility = require('../../resource/utility/token');
+const logMessage = require('../../resource/utility/logMessage');
 const logger = require('../../resource/utility/log');
 
 module.exports = function(app) {
@@ -19,7 +20,7 @@ module.exports = function(app) {
             storeDAO.readByNamePassword(name, password, function(error, result) {
 
                 if(error) {
-                    logger.error(error);
+                    logger.error(logMessage.error(error, __filename, 'storeDAO.readByNamePassword()'));
 
                     res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
                         'errorCode': errorCodeConstant.DATABASE_ERROR
@@ -27,19 +28,13 @@ module.exports = function(app) {
 
                     return;
                 }else {
-                    if(result.rowLength == 0) {
-                        res.status(httpStatusCodeConstant.UNAUTHORIZED).json({
-                            'errorCode': errorCodeConstant.AUTHENTICATION_ERROR
-                        });
-
-                        return;
-                    }else {
-                        let store = JSON.parse(JSON.stringify(result.rows[0]));
+                    if(result) {
+                        let store = result.toObject();
 
                         tokenUtility.create(store, function(error, token) {
 
                             if(error) {
-                                logger.error(error);
+                                logger.error(logMessage.error(error, __filename, 'tokenUtility.create()'));
 
                                 res.status(httpStatusCodeConstant.INTERNAL_SERVER_ERROR).json({
                                     'errorCode': errorCodeConstant.CREATE_TOKEN_ERROR
@@ -52,6 +47,12 @@ module.exports = function(app) {
                                 });
                             }
                         });
+                    }else {
+                        res.status(httpStatusCodeConstant.UNAUTHORIZED).json({
+                            'errorCode': errorCodeConstant.AUTHENTICATION_ERROR
+                        });
+
+                        return;
                     }
                 }
             });
